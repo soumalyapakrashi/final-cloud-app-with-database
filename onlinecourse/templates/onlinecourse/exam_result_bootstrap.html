@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     {% load static %}
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Exam Results</title>
 </head>
 <body>
 
@@ -39,17 +40,39 @@
     {% if grade > 80 %}
     <div class="alert alert-success">
        <!--HINT Display passed info -->
+       <p><strong>Congratulations, {{user.username}}!</strong> You have passed the exam and completed the course with score {{marks}} / {{total_marks}}</p>
     </div>
-        {% else %}
-        <div class="alert alert-danger">
-            <!--HINT Display failed info -->
-        </div>
-        <a class="btn btn-link text-danger" href="{% url 'onlinecourse:course_details' course.id %}">Re-test</a>
-        {% endif %}
-        <div class="card-columns-vertical mt-1">
+    {% else %}
+    <div class="alert alert-danger">
+        <!--HINT Display failed info -->
+        <p><strong>Failed</strong> Sorry, {{user.username}}! You have failed exam with score {{marks}} / {{total_marks}}</p>
+    </div>
+    <a class="btn btn-link text-danger" href="{% url 'onlinecourse:course_details' course.id %}">Re-test</a>
+    {% endif %}
+    <div class="card-columns-vertical mt-1">
         <h5 class="">Exam results</h5>
             <!--HINT Display exam results-->
-        </div>
+        {% for lesson in course.lesson_set.all %}
+            {% for question in lesson.question_set.all %}
+                <div class="card mt-1">
+                    <div class="card-header"><h5>{{question.question_text}}</h5></div>
+                    <div class="card-body">
+                        {% for choice in question.choice_set.all %}
+                            {% if choice in choices and choice.choice_correct == True %}
+                                <p class="text-success">Correct answer: {{choice.choice_text}}</p>
+                            {% elif choice in choices and choice.choice_correct == False %}
+                                <p class="text-danger">Incorrect answer: {{choice.choice_text}}</p>
+                            {% elif choice not in choices and choice.choice_correct == True %}
+                                <p class="text-warning">Not selected: {{choice.choice_text}}</p>
+                            {% else %}
+                                <p>{{choice.choice_text}}</p>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        {% endfor %}
     </div>
+</div>
 </body>
 </html>

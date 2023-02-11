@@ -155,7 +155,9 @@ def show_exam_result(request, course_id, submission_id):
     context = {
         "course": course,
         "choices": selected_choices,
-        "marks": marks
+        "grade": (marks / 20) * 100,
+        "marks": marks,
+        "total_marks": 20
     }
 
     return render(request, 'onlinecourse/exam_result_bootstrap.html', context)
