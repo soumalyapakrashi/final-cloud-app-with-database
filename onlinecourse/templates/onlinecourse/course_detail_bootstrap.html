@@ -78,7 +78,7 @@
 
             <!-- A choice submission form example -->
         <div class="collapse" id="questions-div">
-            <form id="questionform" action="point to a submit view" method="post">
+            <form id="questionform" action="{% url 'onlinecourse:submit' course.id %}" method="post">
                 {% for lesson in course.lesson_set.all %}
                     {% for question in lesson.question_set.all %}
                     <div class="card mt-1">
